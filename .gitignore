@@ -10,4 +10,4 @@ package-lock.json
 
 #dev folders
 /.dynamodb
-/data
+src/data
