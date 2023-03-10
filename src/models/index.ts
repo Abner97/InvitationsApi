@@ -6,7 +6,7 @@ const dynamoDBClient = (): DocumentClient => {
     console.log("Creating a local DynamoDB instance");
     return new AWS.DynamoDB.DocumentClient({
       region: "localhost",
-      endpoint: "http://localhost:5000",
+      endpoint: "http://localhost:8000",
     });
   }
 

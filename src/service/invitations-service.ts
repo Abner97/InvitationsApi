@@ -36,7 +36,7 @@ export class InvitationService {
         Key: {
           id,
         },
-        UpdateExpression: "set willGo = :willGo",
+        UpdateExpression: "set #willGo = :willGo",
         ExpressionAttributeValues: {
           ":willGo": willGo,
         },
@@ -45,5 +45,16 @@ export class InvitationService {
       .promise();
 
     return invitation.Attributes as Invitation;
+  }
+
+  async asyncDeleteInvitation(id: string): Promise<void> {
+    await this.docClient
+      .delete({
+        TableName: this.TableName,
+        Key: {
+          id,
+        },
+      })
+      .promise();
   }
 }

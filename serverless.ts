@@ -1,12 +1,14 @@
 import type { AWS } from "@serverless/typescript";
+import getInvitationById from "@functions/getInvitationById";
+import updateWillGoStatus from "@functions/updateWillGoStatus";
 
 const serverlessConfiguration: AWS = {
   service: "invitationsapi",
   frameworkVersion: "3",
   plugins: [
     "serverless-esbuild",
-    "serverless-offline",
     "serverless-dynamodb-local",
+    "serverless-offline",
   ],
   provider: {
     name: "aws",
@@ -34,13 +36,14 @@ const serverlessConfiguration: AWS = {
               "dynamodb:UpdateItem",
               "dynamodb:DeleteItem",
             ],
+            Resource: "arn:aws:dynamodb:us-west-2:*:table/TodosTable",
           },
         ],
       },
     },
   },
   // import the function via paths
-  functions: { getGuestInfo },
+  functions: { getInvitationById, updateWillGoStatus },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -54,10 +57,27 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     dynamodb: {
+      // start: {
+      //   port: 5000,
+      //   inMemory: true,
+      //   migrate: true,
+      // },
       start: {
-        port: 5000,
+        port: 8000,
         inMemory: true,
         migrate: true,
+        seed: true,
+        convertEmptyValues: true,
+      },
+      seed: {
+        domain: {
+          sources: [
+            {
+              table: "InvitationsTable",
+              sources: ["./src/data/invitations.json"],
+            },
+          ],
+        },
       },
       stages: "dev",
     },
@@ -67,33 +87,13 @@ const serverlessConfiguration: AWS = {
     Resources: {
       InvitationsTable: {
         Type: "AWS::DynamoDB::Table",
+        DeletionPolicy: "Retain",
         Properties: {
           TableName: "InvitationsTable",
           AttributeDefinitions: [
             {
               AttributeName: "id",
               AttributeType: "S",
-            },
-            {
-              AttributeName: "email",
-              AttributeType: "S",
-            },
-            ,
-            {
-              AttributeName: "phoneNumber",
-              AttributeType: "S",
-            },
-            {
-              AttributeName: "name",
-              AttributeType: "S",
-            },
-            {
-              AttributeName: "seats",
-              AttributeType: "N",
-            },
-            {
-              AttributeName: "willGo",
-              AttributeType: "B",
             },
           ],
           KeySchema: [

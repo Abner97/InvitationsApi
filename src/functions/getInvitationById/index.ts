@@ -1,7 +1,7 @@
 import { handlerPath } from "@libs/handler-resolver";
 
-export const etInvitationById = {
-  handler: `${handlerPath(__dirname)}/handler.getInvitationById`,
+export default {
+  handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
       http: {
