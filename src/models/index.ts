@@ -1,16 +1,17 @@
-import * as AWS from "aws-sdk";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-const dynamoDBClient = (): DocumentClient => {
+const dynamoDBClient = () => {
   if (process.env.IS_OFFLINE) {
     console.log("Creating a local DynamoDB instance");
-    return new AWS.DynamoDB.DocumentClient({
+    return new DynamoDBClient({
       region: "localhost",
       endpoint: "http://localhost:8000",
     });
   }
 
-  return new DocumentClient();
+  return new DynamoDBClient({
+    region: "us-east-1",
+  });
 };
 
 export default dynamoDBClient;

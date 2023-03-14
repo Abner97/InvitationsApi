@@ -8,6 +8,7 @@ export default {
       http: {
         method: "patch",
         path: "guest-response",
+        private: true,
         request: {
           schemas: {
             "application/json": schema,

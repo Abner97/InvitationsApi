@@ -14,6 +14,7 @@ const serverlessConfiguration: AWS = {
     name: "aws",
     runtime: "nodejs18.x",
     apiGateway: {
+      apiKeys: ["InvitationsApi"],
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
