@@ -1,6 +1,8 @@
 import type { AWS } from "@serverless/typescript";
 import getInvitationById from "@functions/getInvitationById";
 import updateWillGoStatus from "@functions/updateWillGoStatus";
+import getAllInvitations from "@functions/getAllInvitations";
+import deleteInvitation from "@functions/deleteInvitation";
 
 const serverlessConfiguration: AWS = {
   service: "invitationsapi",
@@ -44,7 +46,12 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { getInvitationById, updateWillGoStatus },
+  functions: {
+    getInvitationById,
+    updateWillGoStatus,
+    getAllInvitations,
+    deleteInvitation,
+  },
   package: { individually: true },
   custom: {
     esbuild: {

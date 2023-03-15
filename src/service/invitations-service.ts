@@ -4,28 +4,24 @@ import {
   GetCommandInput,
   UpdateCommandInput,
   UpdateCommand,
+  DeleteCommandInput,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { Invitation } from "../models/invitation";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { ScanCommand, ScanCommandInput } from "@aws-sdk/client-dynamodb";
 
 export class InvitationService {
   private TableName = "InvitationsTable";
-  private ddbClient: DynamoDBClient = new DynamoDBClient({
-    region: "us-east-1",
-  });
 
-  constructor(private docClient: DynamoDBClient) {
-    this.ddbClient = DynamoDBDocumentClient.from(docClient);
-  }
+  constructor(private docClient: DynamoDBDocumentClient) {}
 
   async getAllInvitations(): Promise<Invitation[]> {
-    const params: GetCommandInput = {
+    const params: ScanCommandInput = {
       TableName: this.TableName,
-      Key: {},
     };
-    const invitations = await this.ddbClient.send(new GetCommand(params));
+    const invitations = await this.docClient.send(new ScanCommand(params));
 
-    return invitations.Item as Invitation[];
+    return invitations.Items as unknown as Invitation[];
   }
 
   async getInvitationById(id: string): Promise<Invitation> {
@@ -35,7 +31,7 @@ export class InvitationService {
         id,
       },
     };
-    const invitation = await this.ddbClient.send(new GetCommand(params));
+    const invitation = await this.docClient.send(new GetCommand(params));
 
     return invitation.Item as Invitation;
   }
@@ -57,14 +53,13 @@ export class InvitationService {
     return invitation.Attributes as Invitation;
   }
 
-  // async asyncDeleteInvitation(id: string): Promise<void> {
-  //   await this.docClient
-  //     .delete({
-  //       TableName: this.TableName,
-  //       Key: {
-  //         id,
-  //       },
-  //     })
-  //     .promise();
-  // }
+  async deleteInvitation(id: string): Promise<void> {
+    const params: DeleteCommandInput = {
+      TableName: this.TableName,
+      Key: {
+        id,
+      },
+    };
+    await this.docClient.send(new DeleteCommand(params));
+  }
 }
