@@ -4,6 +4,8 @@ import updateWillGoStatus from "@functions/updateWillGoStatus";
 import getAllInvitations from "@functions/getAllInvitations";
 import deleteInvitation from "@functions/deleteInvitation";
 
+const stage = process.env.STAGE || "dev";
+console.log("Stage: ", stage);
 const serverlessConfiguration: AWS = {
   service: "invitationsapi",
   frameworkVersion: "3",
@@ -19,7 +21,7 @@ const serverlessConfiguration: AWS = {
       restApi: true,
     },
     apiGateway: {
-      apiKeys: ["InvitationsApi"],
+      apiKeys: [`${stage}-InvitationsApi`],
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
@@ -42,7 +44,7 @@ const serverlessConfiguration: AWS = {
               "dynamodb:UpdateItem",
               "dynamodb:DeleteItem",
             ],
-            Resource: "arn:aws:dynamodb:us-west-2:*:table/TodosTable",
+            Resource: `arn:aws:dynamodb:us-east-1:633411579420:table/${stage}-InvitationsTable`,
           },
         ],
       },
@@ -79,7 +81,7 @@ const serverlessConfiguration: AWS = {
         domain: {
           sources: [
             {
-              table: "InvitationsTable",
+              table: `${stage}-InvitationsTable`,
               sources: ["./seed/invitations.json"],
             },
           ],
@@ -95,7 +97,7 @@ const serverlessConfiguration: AWS = {
         Type: "AWS::DynamoDB::Table",
         DeletionPolicy: "Retain",
         Properties: {
-          TableName: "InvitationsTable",
+          TableName: `${stage}-InvitationsTable`,
           AttributeDefinitions: [
             {
               AttributeName: "id",

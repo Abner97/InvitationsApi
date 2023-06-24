@@ -11,7 +11,7 @@ import { Invitation } from "../models/invitation";
 import { ScanCommand, ScanCommandInput } from "@aws-sdk/client-dynamodb";
 
 export class InvitationService {
-  private TableName = "InvitationsTable";
+  private TableName = `${process.env.STAGE}-InvitationsTable`;
 
   constructor(private docClient: DynamoDBDocumentClient) {}
 
