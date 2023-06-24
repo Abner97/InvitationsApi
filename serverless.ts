@@ -15,6 +15,9 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: "aws",
     runtime: "nodejs18.x",
+    logs: {
+      restApi: true,
+    },
     apiGateway: {
       apiKeys: ["InvitationsApi"],
       minimumCompressionSize: 1024,
@@ -65,11 +68,6 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     dynamodb: {
-      // start: {
-      //   port: 5000,
-      //   inMemory: true,
-      //   migrate: true,
-      // },
       start: {
         port: 8000,
         inMemory: true,
@@ -82,7 +80,7 @@ const serverlessConfiguration: AWS = {
           sources: [
             {
               table: "InvitationsTable",
-              sources: ["./src/data/invitations.json"],
+              sources: ["./seed/invitations.json"],
             },
           ],
         },
