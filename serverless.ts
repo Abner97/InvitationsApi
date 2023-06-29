@@ -5,6 +5,7 @@ import getAllInvitations from "@functions/getAllInvitations";
 import deleteInvitation from "@functions/deleteInvitation";
 
 const stage = process.env.STAGE || "dev";
+
 console.log("Stage: ", stage);
 const serverlessConfiguration: AWS = {
   service: "invitationsapi",

@@ -25,6 +25,7 @@ export class InvitationService {
   }
 
   async getInvitationById(id: string): Promise<Invitation> {
+    console.log(this.TableName);
     const params: GetCommandInput = {
       TableName: this.TableName,
       Key: {
