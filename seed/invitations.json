@@ -1,16 +1,7 @@
 [
   {
     "id": "1",
-    "principalGuest": {
-      "name": "Abraham Vega",
-      "email": "abrahamvega987@gmail.com",
-      "phoneNumber": "60799567"
-    },
-    "companions": [
-      {
-        "name": "Liliana Ardines"
-      }
-    ],
+    "principalGuest": "Abraham Vega",
     "seats": 2,
     "willGo": false
   }
