@@ -8,8 +8,8 @@ export default {
   events: [
     {
       http: {
-        method: "get",
-        path: "invitation/{id}",
+        method: "patch",
+        path: "guest-response",
         private: true,
         integration: "lambda-proxy",
         cors: {
