@@ -1,8 +1,13 @@
 export interface Invitation {
-  id: string;
-  email: string;
-  phoneNumber: string;
-  name: string;
+  id: number;
+  principalGuest: Guest;
+  companions: Array<Guest>;
   seats: number;
   willGo: boolean;
+}
+
+export interface Guest {
+  name: string;
+  email?: string;
+  phoneNumber?: string;
 }

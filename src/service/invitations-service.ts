@@ -1,49 +1,66 @@
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  GetCommandInput,
+  UpdateCommandInput,
+  UpdateCommand,
+  DeleteCommandInput,
+  DeleteCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { Invitation } from "../models/invitation";
+import { ScanCommand, ScanCommandInput } from "@aws-sdk/client-dynamodb";
 
 export class InvitationService {
-  private TableName = "InvitationsTable";
+  private TableName = `${process.env.STAGE}-InvitationsTable`;
 
-  constructor(private docClient: DocumentClient) {}
+  constructor(private docClient: DynamoDBDocumentClient) {}
 
   async getAllInvitations(): Promise<Invitation[]> {
-    const invitations = await this.docClient
-      .scan({
-        TableName: this.TableName,
-      })
-      .promise();
+    const params: ScanCommandInput = {
+      TableName: this.TableName,
+    };
+    const invitations = await this.docClient.send(new ScanCommand(params));
 
-    return invitations.Items as Invitation[];
+    return invitations.Items as unknown as Invitation[];
   }
 
   async getInvitationById(id: string): Promise<Invitation> {
-    const invitation = await this.docClient
-      .get({
-        TableName: this.TableName,
-        Key: {
-          id,
-        },
-      })
-      .promise();
+    console.log(this.TableName);
+    const params: GetCommandInput = {
+      TableName: this.TableName,
+      Key: {
+        id,
+      },
+    };
+    const invitation = await this.docClient.send(new GetCommand(params));
 
     return invitation.Item as Invitation;
   }
 
   async setWillGoStatus(id: string, willGo: boolean): Promise<Invitation> {
-    const invitation = await this.docClient
-      .update({
-        TableName: this.TableName,
-        Key: {
-          id,
-        },
-        UpdateExpression: "set willGo = :willGo",
-        ExpressionAttributeValues: {
-          ":willGo": willGo,
-        },
-        ReturnValues: "ALL_NEW",
-      })
-      .promise();
+    const params: UpdateCommandInput = {
+      TableName: this.TableName,
+      Key: {
+        id,
+      },
+      UpdateExpression: "set willGo = :willGo",
+      ExpressionAttributeValues: {
+        ":willGo": willGo,
+      },
+      ReturnValues: "ALL_NEW",
+    };
+    const invitation = await this.docClient.send(new UpdateCommand(params));
 
     return invitation.Attributes as Invitation;
+  }
+
+  async deleteInvitation(id: string): Promise<void> {
+    const params: DeleteCommandInput = {
+      TableName: this.TableName,
+      Key: {
+        id,
+      },
+    };
+    await this.docClient.send(new DeleteCommand(params));
   }
 }

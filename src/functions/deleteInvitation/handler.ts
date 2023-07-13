@@ -1,16 +1,16 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import invitationService from "../../service";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import invitationService from "src/service";
 
-const getInvitationById = async (
+const deleteInvitation = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   const { id } = event.pathParameters;
   try {
-    const invitation = await invitationService.getInvitationById(id);
+    await invitationService.deleteInvitation(id);
     return formatJSONResponse({
-      ...invitation,
+      message: `Invitation with id ${id} deleted successfully`,
     });
   } catch (e) {
     return formatJSONResponse({
@@ -20,4 +20,4 @@ const getInvitationById = async (
   }
 };
 
-export const main = middyfy(getInvitationById);
+export const main = middyfy(deleteInvitation);

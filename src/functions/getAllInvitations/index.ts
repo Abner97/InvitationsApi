@@ -9,7 +9,7 @@ export default {
     {
       http: {
         method: "get",
-        path: "invitation/{id}",
+        path: "getAllInvitations",
         private: true,
         integration: "lambda-proxy",
         cors: {

@@ -8,8 +8,8 @@ export default {
   events: [
     {
       http: {
-        method: "get",
-        path: "invitation/{id}",
+        method: "delete",
+        path: "delete",
         private: true,
         integration: "lambda-proxy",
         cors: {
